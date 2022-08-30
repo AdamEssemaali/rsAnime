@@ -1,0 +1,26 @@
+name: Build on linux
+on: [push]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: debug build
+        run: cargo build --verbose
+      - name: upload the debug build artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: ${{ github.event.repository.name }}-debug
+          path: target/debug/${{ github.event.repository.name }}
+      
+      - name: release build
+        run: cargo build --verbose --release
+      - name: upload the release build artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: ${{ github.event.repository.name }}-release
+          path: target/release/${{ github.event.repository.name }}
